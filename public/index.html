@@ -4,14 +4,19 @@
 <head>
     <title>Chess</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/chessboard-0.3.0.min.css" />
+    <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="js/chess.min.js"></script>
+    <script src="js/chessboard-0.3.0.min.js"></script>
+    <script src="js/app.js"></script>
 </head>
 
 <body class="vertical-center">
-    <div class="container-fluid">
+    <div id="login" class="container-fluid">
         <div class="row">
             <div class="col-xs-12 text-center">
                 <h1 class="text-uppercase">Chess</h1>
@@ -19,7 +24,10 @@
         </div>
         <div class="row">
             <div class="col-xs-12 text-center">
-                <a href="game.html" class="btn btn-success btn-lg">Start Game</a>
+                <div class="form-group">
+                    <input id="username" type="text" class="form-control" placeholder="Your Name">
+                </div>
+                <button id="btnLogin" class="btn btn-success btn-lg">Start Game</button>
             </div>
         </div>
         <div class="row">
@@ -28,6 +36,34 @@
             </div>
         </div>
     </div>
+    <div id="game" class="container-fluid" style="display: none;">
+        <div class="col-xs-1">&nbsp;</div>
+        <div class="col-xs-10 col-sm-7">
+            <div id="board" style="max-width: 600px;"></div>
+        </div>
+        <div class="col-sm-3 hidden-xs">
+            <div class="panel panel-default">
+                <div class="panel-heading">Moves</div>
+                <div class="panel-body">
+                    List of Moves here
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-1">&nbsp;</div>
+    </div>
+    <!-- TODO: Move to app.js -->
+    <script type="text/javascript">
+        $('#btnLogin').on('click', function() {
+            username = $('#username').val();
+
+            if (username.length > 0) {
+                socket.emit('login', username);
+                $("#login").hide();
+                waitingDialog.show("Waiting for Opponent...");
+                //setTimeout(function () {waitingDialog.hide();}, 3000);
+            }
+        });
+    </script>
 </body>
 
 </html>
