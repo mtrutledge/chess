@@ -1,0 +1,26 @@
+body {
+    margin-top: 0;
+    background: url('img/default/background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12pt;
+}
+
+h1 {
+    color: #fff;
+    font-size: 3em;
+}
+
+a.btn {
+    margin-bottom: 20px;
+}
+
+.vertical-center {
+    min-height: 100%;
+    /* Fallback for browsers do NOT support vh unit */
+    min-height: 100vh;
+    /* These two lines are counted as one :-)       */
+    display: flex;
+    align-items: center;
+}

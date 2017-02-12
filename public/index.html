@@ -4,89 +4,30 @@
 <head>
     <title>Chess</title>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/chessboard-0.3.0.min.css" />
-    <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="js/chess.min.js"></script>
-    <script src="js/chessboard-0.3.0.min.js"></script>
 </head>
 
-<body>
-    <div class="container-fluid" style="margin-top: 20px;">
-        <div class="col-xs-1">&nbsp;</div>
-        <div class="col-xs-10 col-sm-7">
-            <div id="board" style="max-width: 600px;"></div>
-        </div>
-        <div class="col-sm-3 hidden-xs">
-            <div class="panel panel-default">
-                <div class="panel-heading">Moves</div>
-                <div class="panel-body">
-                    List of Moves here
-                </div>
+<body class="vertical-center">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                <h1 class="text-uppercase">Chess</h1>
             </div>
         </div>
-        <div class="col-xs-1">&nbsp;</div>
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                <a href="game.html" class="btn btn-success btn-lg">Start Game</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                <a href="view.html" class="btn btn-default btn-lg">View Game</a>
+            </div>
+        </div>
     </div>
-
-    <script type="text/javascript">
-        var cfg = {
-            draggable: true,
-            position: 'start',
-            onDragStart: onDragStart,
-            onDrop: onDrop,
-            onSnapEnd: onSnapEnd
-        };
-        var board = ChessBoard('board', cfg);
-        var game = new Chess();
-
-        // setup my socket client
-        var socket = io();
-        // called when the server calls socket.broadcast('move')
-        socket.on('move', function(msg) {
-            game.move(msg);
-            console.log(game.fen());
-            board.position(msg.board); // fen is the board layout
-        });
-
-        // do not pick up pieces if the game is over
-        // only pick up pieces for the side to move
-        function onDragStart(source, piece, position, orientation) {
-            if (game.game_over() === true ||
-                (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-                (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-                return false;
-            }
-        };
-
-
-
-        function onDrop(source, target) {
-            // see if the move is legal
-            var move = game.move({
-                from: source,
-                to: target,
-                promotion: 'q' // NOTE: always promote to a queen for example simplicity
-            });
-
-            // illegal move
-            if (move === null) {
-                return 'snapback';
-            } else {
-                socket.emit('move', {
-                    move: move,
-                    board: game.fen()
-                });
-            }
-        };
-
-        // update the board position after the piece snap 
-        // for castling, en passant, pawn promotion
-        function onSnapEnd() {
-            board.position(game.fen());
-        };
-    </script>
 </body>
 
 </html>
