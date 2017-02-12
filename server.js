@@ -28,17 +28,12 @@ var linesDrawn = [];
 //////////////////////////////////////////////////////
 // Hook up events for new connections that come in to the server
 //////////////////////////////////////////////////////
+// Called when the client calls socket.emit('move')
 io.on('connection', function(socket) {
-    // Send all history to the client that connected
-    for (var i in linesDrawn) {
-        socket.emit('drawEvent', { line: linesDrawn[i] });
-    }
+    console.log('Client Connected: ' + socket.id);
 
-    // Add "drawEvent" message handler.
-    socket.on('drawEvent', function(data) {
-        // Add received line to history
-        linesDrawn.push(data.line);
-        // Send line to all clients
-        io.emit('drawEvent', { line: data.line });
+    socket.on('move', function(msg) {
+        console.log("Move Made");
+        socket.broadcast.emit('move', msg);
     });
 });
