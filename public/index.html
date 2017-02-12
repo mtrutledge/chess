@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chess</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/chessboard-0.3.0.min.css" />
+    <!--<script src="/socket.io/socket.io.js"></script>-->
+    <script src="js/chess.min.js"></script>
+    <script src="js/chessboard-0.3.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1>Chess</h1>
+    <div id="board" style="width: 400px"></div>
+
+    <script type="text/javascript">
+        var cfg = {
+            draggable: true,
+            position: 'start',
+            onDragStart: onDragStart,
+            onDrop: onDrop,
+            onSnapEnd: onSnapEnd
+        };
+        var board = ChessBoard('board', cfg);
+        var game = new Chess();
+
+        var handleMove = function(source, target) {
+            var move = game.move({
+                from: source,
+                to: target
+            });
+        }
+
+        // do not pick up pieces if the game is over
+        // only pick up pieces for the side to move
+        function onDragStart(source, piece, position, orientation) {
+            if (game.game_over() === true ||
+                (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
+                (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+                return false;
+            }
+        };
+
+
+
+        function onDrop(source, target) {
+            // see if the move is legal
+            var move = game.move({
+                from: source,
+                to: target,
+                promotion: 'q' // NOTE: always promote to a queen for example simplicity
+            });
+
+            // illegal move
+            if (move === null) {
+                return 'snapback';
+            }
+            /*else {
+                socket.emit('move', {
+                    move: move,
+                    gameId: serverGame.id,
+                    board: game.fen()
+                });
+            }*/
+
+        };
+
+        // update the board position after the piece snap 
+        // for castling, en passant, pawn promotion
+        function onSnapEnd() {
+            board.position(game.fen());
+        };
+    </script>
+</body>
+
+</html>
