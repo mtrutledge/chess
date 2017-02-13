@@ -1,6 +1,8 @@
 // setup my socket client
 var socket = io();
-var board, game;
+
+// Variables for the actual game and the board for rendering
+var board, game, playerColor;
 
 // default board config
 var cfg = {
@@ -10,6 +12,31 @@ var cfg = {
     onDrop: onPieceDrop,
     onSnapEnd: onPieceSnapEnd
 };
+
+$('#btnLogin').on('click', function() {
+    username = $('#username').val();
+
+    if (username.length > 0) {
+        socket.emit('login', username);
+        $("#login").hide();
+        waitingDialog.show("Waiting for Opponent");
+    }
+});
+
+$('#btnResign').on('click', function() {
+    alert("Resign Clicked");
+});
+
+socket.on('startGame', function(data) {
+    $("#login").hide();
+    $("#game").show();
+
+    playerColor = data.game.playerColor;
+
+    InitGame('board', $.extend(cfg, { orientation: playerColor }));
+
+    waitingDialog.hide();
+});
 
 function InitGame(boardId, config) {
     if (config === undefined)

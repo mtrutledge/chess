@@ -58,24 +58,6 @@
             </div>
         </div>
     </div>
-    <!-- TODO: Move to app.js -->
-    <script type="text/javascript">
-        $('#btnLogin').on('click', function() {
-            username = $('#username').val();
-
-            if (username.length > 0) {
-                socket.emit('login', username);
-                $("#login").hide();
-                waitingDialog.show("Waiting for Opponent");
-            }
-        });
-
-        socket.on('startGame', function(data) {
-            $("#login").hide();
-            $("#game").show();
-            waitingDialog.hide();
-        });
-    </script>
 </body>
 
 </html>
