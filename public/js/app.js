@@ -13,18 +13,20 @@ var cfg = {
     onSnapEnd: onPieceSnapEnd
 };
 
-$('#btnLogin').on('click', function() {
-    username = $('#username').val();
+$(document).ready(function() {
+    $('#btnLogin').on('click', function() {
+        username = $('#username').val();
 
-    if (username.length > 0) {
-        socket.emit('login', username);
-        $("#login").hide();
-        waitingDialog.show("Waiting for Opponent");
-    }
-});
+        if (username.length > 0) {
+            socket.emit('login', username);
+            $("#login").hide();
+            waitingDialog.show("Waiting for Opponent");
+        }
+    });
 
-$('#btnResign').on('click', function() {
-    alert("Resign Clicked");
+    $('#btnResign').on('click', function() {
+        alert("Resign Clicked");
+    });
 });
 
 socket.on('startGame', function(data) {

@@ -32,7 +32,7 @@ var activeGames = {}; // Active Games on System
 //////////////////////////////////////////////////////
 // Called when the client calls socket.emit('move')
 io.on('connection', function(socket) {
-    console.log('New connection ' + socket);
+    console.log('New connection ' + socket.id);
 
     socket.on('login', function(userId) {
         console.log(userId + ' joining lobby');
@@ -50,20 +50,19 @@ io.on('connection', function(socket) {
 
         lobbyUsers[userId] = socket;
 
-        if (lobbyUsers.length >= 2) {
+        if (Object.keys(lobbyUsers).length >= 2) {
             var opponentId;
 
-            $.each(lobbyUsers, function(i, o) {
-
-                if (o.userId !== socket.userId) {
-                    opponentId = o.userId;
-                    return false;
+            for (var o in lobbyUsers) {
+                if (lobbyUsers[o].userId !== socket.userId) {
+                    opponentId = o;
+                    break;
                 }
-            });
+            }
 
             console.log("Creating Game between" + lobbyUsers[userId].id + " and " + lobbyUsers[opponentId].id)
             var game = {
-                id: activeGames.length + 1,
+                id: Object.keys(activeGames).length + 1,
                 board: null,
                 users: { white: socket.userId, black: opponentId }
             };
