@@ -51,7 +51,16 @@ io.on('connection', function(socket) {
         lobbyUsers[userId] = socket;
 
         if (lobbyUsers.length >= 2) {
-            var opponentId = lobbyUsers[0].userId;
+            var opponentId;
+
+            $.each(lobbyUsers, function(i, o) {
+
+                if (o.userId !== socket.userId) {
+                    opponentId = o.userId;
+                    return false;
+                }
+            });
+
             console.log("Creating Game between" + lobbyUsers[userId].id + " and " + lobbyUsers[opponentId].id)
             var game = {
                 id: activeGames.length + 1,

@@ -25,7 +25,7 @@
         <div class="row">
             <div class="col-xs-12 text-center">
                 <div class="form-group">
-                    <input id="username" type="text" class="form-control" placeholder="Your Name">
+                    <input id="username" type="email" class="form-control" placeholder="Email Address" required="required" />
                 </div>
                 <button id="btnLogin" class="btn btn-success btn-lg">Start Game</button>
             </div>
@@ -37,19 +37,26 @@
         </div>
     </div>
     <div id="game" class="container-fluid" style="display: none;">
-        <div class="col-xs-1">&nbsp;</div>
-        <div class="col-xs-10 col-sm-7">
-            <div id="board" style="max-width: 600px;"></div>
-        </div>
-        <div class="col-sm-3 hidden-xs">
-            <div class="panel panel-default">
-                <div class="panel-heading">Moves</div>
-                <div class="panel-body">
-                    List of Moves here
+        <div class="row">
+            <div class="col-xs-1">&nbsp;</div>
+            <div class="col-xs-10 col-sm-7">
+                <div id="board" style="max-width: 600px;"></div>
+            </div>
+            <div class="col-sm-3 hidden-xs">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Moves</div>
+                    <div class="panel-body">
+                        <ul id="moveList" />
+                    </div>
                 </div>
             </div>
+            <div class="col-xs-1">&nbsp;</div>
         </div>
-        <div class="col-xs-1">&nbsp;</div>
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                <button id="btnResign" class="btn btn-lg btn-danger">Resign</button>
+            </div>
+        </div>
     </div>
     <!-- TODO: Move to app.js -->
     <script type="text/javascript">
@@ -59,9 +66,14 @@
             if (username.length > 0) {
                 socket.emit('login', username);
                 $("#login").hide();
-                waitingDialog.show("Waiting for Opponent...");
-                //setTimeout(function () {waitingDialog.hide();}, 3000);
+                waitingDialog.show("Waiting for Opponent");
             }
+        });
+
+        socket.on('startGame', function(data) {
+            $("#login").hide();
+            $("#game").show();
+            waitingDialog.hide();
         });
     </script>
 </body>
