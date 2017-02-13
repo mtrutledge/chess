@@ -38,6 +38,13 @@ socket.on('startGame', function(data) {
     waitingDialog.hide();
 });
 
+// called when the server calls socket.broadcast('move')
+socket.on('move', function(msg) {
+    console.log('Move coming in ' + msg);
+    game.move(msg);
+    board.position(game.fen()); // fen is the board layout
+});
+
 function InitGame(boardId, config) {
     if (config === undefined)
         config = cfg;
@@ -54,7 +61,8 @@ function InitGame(boardId, config) {
 function onPieceDragStart(source, piece, position, orientation) {
     if (game.game_over() === true ||
         (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-        (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+        (game.turn() === 'b' && piece.search(/^w/) !== -1) ||
+        (game.turn() !== playerColor)) {
         return false;
     }
 };
