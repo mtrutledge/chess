@@ -64,21 +64,21 @@ io.on('connection', function(socket) {
             var game = {
                 id: Object.keys(activeGames).length + 1,
                 board: null,
-                users: { white: socket.userId, black: opponentId }
+                users: { white: opponentId, black: socket.userId }
             };
 
             socket.gameId = game.id;
             activeGames[game.id] = game;
 
-            users[game.users.white].games[game.id] = game.id;
-            users[game.users.black].games[game.id] = game.id;
+            users[opponentId].games[game.id] = game.id;
+            users[socket.userId].games[game.id] = game.id;
 
             console.log('Starting game: ' + game.id);
-            lobbyUsers[game.users.white].emit('startGame', { game: game, color: 'white' });
-            lobbyUsers[game.users.black].emit('startGame', { game: game, color: 'black' });
+            lobbyUsers[opponentId].emit('startGame', { game: game, playerColor: 'white' });
+            lobbyUsers[socket.userId].emit('startGame', { game: game, playerColor: 'black' });
 
-            delete lobbyUsers[game.users.white];
-            delete lobbyUsers[game.users.black];
+            delete lobbyUsers[opponentId];
+            delete lobbyUsers[socket.userId];
         } else {
             socket.broadcast.emit('joinlobby', socket.userId);
         }

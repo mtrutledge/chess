@@ -15,7 +15,8 @@
             "program": "${workspaceRoot}/server.js",
             "restart": true,
             "port": 5858,
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
         },
         {
             "type": "node",

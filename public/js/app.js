@@ -33,7 +33,7 @@ socket.on('startGame', function(data) {
     $("#login").hide();
     $("#game").show();
 
-    playerColor = data.game.playerColor;
+    playerColor = data.playerColor;
 
     InitGame('board', $.extend(cfg, { orientation: playerColor }));
 
@@ -64,7 +64,7 @@ function onPieceDragStart(source, piece, position, orientation) {
     if (game.game_over() === true ||
         (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
         (game.turn() === 'b' && piece.search(/^w/) !== -1) ||
-        (game.turn() !== playerColor)) {
+        (game.turn() !== playerColor[0])) {
         return false;
     }
 };
