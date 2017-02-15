@@ -18,7 +18,8 @@ console.log('Server Listening on ' + PORT);
 //////////////////////////////////////////////////////
 // Tell express web server where our html lives
 //////////////////////////////////////////////////////
-app.use(express.static(__dirname + '/public'));
+app.use(express.compress());
+app.use(express.static(__dirname + '/public', { maxAge: 86400000 }));
 
 //////////////////////////////////////////////////////
 // Store the users connected and the rooms
