@@ -61,6 +61,10 @@ function ShowMoveList(g) {
     }, this);
 }
 
+socket.on('connect_failed', function() {
+    waitingDialog.hide();
+});
+
 socket.on('startGame', function(data) {
     $("#login").hide();
     $("#game").show();
