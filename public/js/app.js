@@ -25,9 +25,41 @@ $(document).ready(function() {
     });
 
     $('#btnResign').on('click', function() {
-        alert("Resign Clicked");
+        socket.emit('resign', { userId: socket.userId, gameId: game.id });
+
+        Resign();
     });
 });
+
+function Resign() {
+    $('#game').hide();
+    $('#login').show();
+
+    game.reset();
+}
+
+function AddMove(m) {
+    var whiteList = $("#whiteMoveList");
+    var blackList = $("#blackMoveList");
+    if (m.color == "w") {
+        whiteList.append("<li>" + m.san + "</li>");
+    } else {
+        blackList.append("<li>" + m.san + "</li>");
+    }
+}
+
+function ShowMoveList(g) {
+    var whiteList = $("#whiteMoveList");
+    var blackList = $("#blackMoveList");
+
+    whiteList.empty();
+    blackList.empty();
+
+    var history = g.history({ verbose: true });
+    history.forEach(function(o) {
+        AddMove(o);
+    }, this);
+}
 
 socket.on('startGame', function(data) {
     $("#login").hide();
@@ -42,9 +74,17 @@ socket.on('startGame', function(data) {
 
 // called when the server calls socket.broadcast('move')
 socket.on('move', function(msg) {
-    console.log('Move coming in ' + msg);
-    game.move(msg);
+    game.move(msg.move);
     board.position(game.fen()); // fen is the board layout
+    AddMove(msg.move);
+});
+
+socket.on('resign', function(msg) {
+    Resign();
+});
+
+socket.on('logout', function(msg) {
+    Resign();
 });
 
 function InitGame(boardId, config) {
@@ -85,6 +125,7 @@ function onPieceDrop(source, target) {
             move: move,
             board: game.fen()
         });
+        AddMove(move);
     }
 };
 

@@ -114,8 +114,13 @@ io.on('connection', function(socket) {
     });
 
     socket.on('move', function(msg) {
-        console.log("Move Made");
         socket.broadcast.emit('move', msg);
+    });
+
+    socket.on('resign', function(data) {
+        delete activeGames[data.gameId];
+
+        socket.broadcast.emit('resign', data);
     });
 
     socket.on('disconnect', function(msg) {
@@ -128,6 +133,7 @@ io.on('connection', function(socket) {
         }
 
         delete lobbyUsers[socket.userId];
+        delete users[socket.userId];
 
         socket.broadcast.emit('logout', {
             userId: socket.userId,
