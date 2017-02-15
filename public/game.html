@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/chessboard-0.3.0.min.css" />
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/waitDialog.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/chess.min.js"></script>
     <script src="js/chessboard-0.3.0.min.js"></script>
@@ -36,19 +37,11 @@
             position: 'start',
             onDragStart: onDragStart,
             onDrop: onDrop,
-            onSnapEnd: onSnapEnd
+            onSnapEnd: onSnapEnd,
+            onChange: onMoveEnd
         };
         var board = ChessBoard('board', cfg);
         var game = new Chess();
-
-        // setup my socket client
-        var socket = io();
-        // called when the server calls socket.broadcast('move')
-        socket.on('move', function(msg) {
-            game.move(msg);
-            console.log(game.fen());
-            board.position(msg.board); // fen is the board layout
-        });
 
         // do not pick up pieces if the game is over
         // only pick up pieces for the side to move
@@ -60,7 +53,17 @@
             }
         };
 
-
+        function onMoveEnd(oldPos, newPos) {
+            setTimeout(function() {
+                if (game.turn() == 'b' && !game.game_over()) {
+                    // Move Computer
+                    var moves = game.moves();
+                    var move = moves[Math.floor(Math.random() * moves.length)];
+                    game.move(move);
+                    board.position(game.fen());
+                }
+            }, 500);
+        }
 
         function onDrop(source, target) {
             // see if the move is legal
@@ -73,11 +76,6 @@
             // illegal move
             if (move === null) {
                 return 'snapback';
-            } else {
-                socket.emit('move', {
-                    move: move,
-                    board: game.fen()
-                });
             }
         };
 
