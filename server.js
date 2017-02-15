@@ -1,6 +1,7 @@
 //////////////////////////////////////////////////////
 // Import node modules
 //////////////////////////////////////////////////////
+var compression = require('compression');
 var express = require('express'),
     app = express(), // Create the app
     http = require('http'),
@@ -18,7 +19,7 @@ console.log('Server Listening on ' + PORT);
 //////////////////////////////////////////////////////
 // Tell express web server where our html lives
 //////////////////////////////////////////////////////
-//app.use(express.compress());
+app.use(compression());
 app.use(express.static(__dirname + '/public', { maxAge: 86400000 }));
 
 //////////////////////////////////////////////////////
