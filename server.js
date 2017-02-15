@@ -117,4 +117,21 @@ io.on('connection', function(socket) {
         console.log("Move Made");
         socket.broadcast.emit('move', msg);
     });
+
+    socket.on('disconnect', function(msg) {
+
+        console.log(msg);
+
+        if (socket && socket.userId && socket.gameId) {
+            console.log(socket.userId + ' disconnected');
+            console.log(socket.gameId + ' disconnected');
+        }
+
+        delete lobbyUsers[socket.userId];
+
+        socket.broadcast.emit('logout', {
+            userId: socket.userId,
+            gameId: socket.gameId
+        });
+    });
 });

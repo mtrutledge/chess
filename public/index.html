@@ -32,13 +32,9 @@
                     <input id="username" type="email" class="form-control" placeholder="Email Address" required="required" />
                 </div>
                 <button id="btnLogin" class="btn btn-success btn-lg btn-block">Start Game</button>
+                <button id="btnView" class="btn btn-default btn-lg btn-block">View Game</button>
             </div>
             <div class="col-sm-4 hidden-xs">&nbsp;</div>>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 text-center">
-                <a href="view.html" class="btn btn-default btn-lg btn-block">View Game</a>
-            </div>
         </div>
     </div>
     <div id="game" class="container-fluid" style="display: none;">
@@ -54,7 +50,14 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Moves</div>
                     <div class="panel-body">
-                        <ul id="moveList" />
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <ol id="whiteMoveList"></ol>
+                            </div>
+                            <div class="col-xs-6">
+                                <ol id="blackMoveList" style="list-style-type: none;"></ol>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
