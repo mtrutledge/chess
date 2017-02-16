@@ -10,8 +10,7 @@ var cfg = {
     position: 'start',
     onDragStart: onPieceDragStart,
     onDrop: onPieceDrop,
-    onSnapEnd: onPieceSnapEnd,
-    onChange: onChange
+    onSnapEnd: onPieceSnapEnd
 };
 
 $(document).ready(function() {
@@ -47,6 +46,7 @@ function AddMove(m) {
     } else {
         blackList.append("<li>" + m.san + "</li>");
     }
+    UpdateGameStatus();
 }
 
 function ShowMoveList(g) {
@@ -65,11 +65,13 @@ function ShowMoveList(g) {
 function UpdateGameStatus() {
     var turnColor = (game.turn() === 'w' ? 'White' : 'Black');
 
-    $("#gameStatus").removeClass('alert-danger').removeClass('alert-warning').addClass('alert-info').text(turnColor + 's Turn');
+    if (game.in_check())
+        $("#gameStatus").removeClass('alert-info').addClass('alert-danger').text('CHECK');
+    else
+        $("#gameStatus").removeClass('alert-danger').removeClass('alert-warning').addClass('alert-info').text(turnColor + 's Turn');
+
     if (game.game_over()) {
-        if (game.in_check())
-            $("#gameStatus").removeClass('alert-info').addClass('alert-danger').text('CHECK');
-        else if (game.in_checkmate())
+        if (game.in_checkmate())
             $("#gameStatus").removeClass('alert-info').addClass('alert-danger').text('CHECK MATE');
         else if (game.in_draw())
             $("#gameStatus").removeClass('alert-info').addClass('alert-warning').text('DRAW');
@@ -121,10 +123,6 @@ function InitGame(boardId, config) {
 
     board = ChessBoard(boardId, config);
     game = new Chess();
-}
-
-function onChange(oldPos, newPos) {
-    UpdateGameStatus();
 }
 
 // do not pick up pieces if the game is over
