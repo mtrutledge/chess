@@ -10,7 +10,8 @@ var cfg = {
     position: 'start',
     onDragStart: onPieceDragStart,
     onDrop: onPieceDrop,
-    onSnapEnd: onPieceSnapEnd
+    onSnapEnd: onPieceSnapEnd,
+    onChange: onChange
 };
 
 $(document).ready(function() {
@@ -61,6 +62,26 @@ function ShowMoveList(g) {
     }, this);
 }
 
+function UpdateGameStatus() {
+    var turnColor = (game.turn() === 'w' ? 'White' : 'Black');
+
+    $("#gameStatus").append(turnColor + 's Turn');
+    if (game.game_over()) {
+        if (game.in_check())
+            $("#gameStatus").append('CHECK');
+        else if (game.in_checkmate())
+            $("#gameStatus").append('CHECK MATE');
+        else if (game.in_draw())
+            $("#gameStatus").append('DRAW');
+        else if (game.in_stalemate())
+            $("#gameStatus").append('STALEMATE');
+        else if (game.in_threefold_repetition())
+            $("#gameStatus").append('3 MOVE REPITION - GAME OVER');
+        else if (game.insufficient_material())
+            $("#gameStatus").append('INSUFFICIENT MATERIAL TO PALY - GAME OVER');
+    }
+}
+
 socket.on('connect_failed', function() {
     waitingDialog.hide();
 });
@@ -100,6 +121,10 @@ function InitGame(boardId, config) {
 
     board = ChessBoard(boardId, config);
     game = new Chess();
+}
+
+function onChange(oldPos, newPos) {
+    UpdateGameStatus();
 }
 
 // do not pick up pieces if the game is over
