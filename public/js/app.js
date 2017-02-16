@@ -65,20 +65,20 @@ function ShowMoveList(g) {
 function UpdateGameStatus() {
     var turnColor = (game.turn() === 'w' ? 'White' : 'Black');
 
-    $("#gameStatus").append(turnColor + 's Turn');
+    $("#gameStatus").removeClass('alert-danger').removeClass('alert-warning').addClass('alert-info').text(turnColor + 's Turn');
     if (game.game_over()) {
         if (game.in_check())
-            $("#gameStatus").append('CHECK');
+            $("#gameStatus").removeClass('alert-info').addClass('alert-danger').text('CHECK');
         else if (game.in_checkmate())
-            $("#gameStatus").append('CHECK MATE');
+            $("#gameStatus").removeClass('alert-info').addClass('alert-danger').text('CHECK MATE');
         else if (game.in_draw())
-            $("#gameStatus").append('DRAW');
+            $("#gameStatus").removeClass('alert-info').addClass('alert-warning').text('DRAW');
         else if (game.in_stalemate())
-            $("#gameStatus").append('STALEMATE');
+            $("#gameStatus").removeClass('alert-info').addClass('alert-warning').text('STALEMATE');
         else if (game.in_threefold_repetition())
-            $("#gameStatus").append('3 MOVE REPITION - GAME OVER');
+            $("#gameStatus").removeClass('alert-info').addClass('alert-warning').text('3 MOVE REPITION - GAME OVER');
         else if (game.insufficient_material())
-            $("#gameStatus").append('INSUFFICIENT MATERIAL TO PALY - GAME OVER');
+            $("#gameStatus").removeClass('alert-info').addClass('alert-warning').text('INSUFFICIENT MATERIAL TO PALY - GAME OVER');
     }
 }
 
