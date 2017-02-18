@@ -4,11 +4,14 @@
 <head>
     <title>Chess</title>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/style.css" />
     <link rel="stylesheet" type="text/css" href="css/chessboard-0.3.0.min.css" />
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/waitDialog.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="js/chess.min.js"></script>
     <script src="js/chessboard-0.3.0.min.js"></script>
     <script src="js/app.js"></script>
@@ -31,21 +34,23 @@
                     <input id="username" type="email" class="form-control" placeholder="Email Address" required="required" />
                 </div>
                 <button id="btnLogin" class="btn btn-success btn-lg btn-block">Start Game</button>
+                <a id="btnComputer" href="game.html" class="btn btn-default btn-lg btn-block">Play Against Computer</a>
                 <button id="btnView" class="btn btn-default btn-lg btn-block hidden">View Game</button>
             </div>
             <div class="col-sm-4 hidden-xs">&nbsp;</div>>
         </div>
     </div>
-    <div id="game" class="container-fluid" style="display: none;">
+    <div id="game" style="display: none;">
         <div class="row">
             <div class="<col-xs-12>">&nbsp;</div>
         </div>
         <div class="row">
-            <div class="col-xs-1">&nbsp;</div>
-            <div class="col-xs-10 col-sm-7">
+            <div class="col-sm-1 hidden-xs">&nbsp;</div>
+            <div class="col-xs-12 col-sm-7">
                 <div id="board" style="max-width: 600px;"></div>
             </div>
-            <div class="col-sm-3 hidden-xs">
+            <div class="col-xs-12 col-sm-3">
+                <div id="gameStatus" class="alert alert-info text-center">Whites Turn</div>
                 <div class="panel panel-default">
                     <div class="panel-heading">Moves</div>
                     <div class="panel-body">
@@ -60,7 +65,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-1">&nbsp;</div>
+            <div class="col-sm-1 hidden-xs">&nbsp;</div>
         </div>
         <div class="row">
             <div class="col-xs-12 text-center">

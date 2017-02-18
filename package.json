@@ -1,9 +1,10 @@
 {
-   "name": "Pigpen",
-   "description": "GDG Example Real Time Node app",
-   "author": "Matt Rutledge and Ian Brown",
-   "dependencies" : {
-      "express": "4.x",
-      "socket.io": "*"
-   }
+  "name": "Chess",
+  "description": "GDG Example Real Time Node app",
+  "author": "Matt Rutledge and Ian Brown",
+  "dependencies": {
+    "compression": "^1.6.2",
+    "express": "4.x",
+    "socket.io": "~1.7.2"
+  }
 }
