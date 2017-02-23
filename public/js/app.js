@@ -156,8 +156,14 @@ function onPieceDrop(source, target) {
     }
 };
 
-// update the board position after the piece snap 
+// update the board position after the piece snap
 // for castling, en passant, pawn promotion
 function onPieceSnapEnd() {
     board.position(game.fen());
 };
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+        .register('./service-worker.js')
+        .then(function() { console.log('Service Worker registered'); });
+}
