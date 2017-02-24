@@ -1,6 +1,3 @@
-// setup my socket client
-var socket = io();
-
 // Variables for the actual game and the board for rendering
 var board, game, playerColor;
 
@@ -18,15 +15,13 @@ $(document).ready(function() {
         username = $('#username').val();
 
         if (username.length > 0) {
-            socket.emit('login', username);
             $("#login").hide();
-            waitingDialog.show("Waiting for Opponent");
+            $('#game').show();
+            InitGame();
         }
     });
 
     $('#btnResign').on('click', function() {
-        socket.emit('resign', { userId: socket.userId, gameId: game.id });
-
         Resign();
     });
 });
@@ -84,36 +79,6 @@ function UpdateGameStatus() {
     }
 }
 
-socket.on('connect_failed', function() {
-    waitingDialog.hide();
-});
-
-socket.on('startGame', function(data) {
-    $("#login").hide();
-    $("#game").show();
-
-    playerColor = data.playerColor;
-
-    InitGame('board', $.extend(cfg, { orientation: playerColor }));
-
-    waitingDialog.hide();
-});
-
-// called when the server calls socket.broadcast('move')
-socket.on('move', function(msg) {
-    game.move(msg.move);
-    board.position(game.fen()); // fen is the board layout
-    AddMove(msg.move);
-});
-
-socket.on('resign', function(msg) {
-    Resign();
-});
-
-socket.on('logout', function(msg) {
-    Resign();
-});
-
 function InitGame(boardId, config) {
     if (config === undefined)
         config = cfg;
@@ -123,6 +88,9 @@ function InitGame(boardId, config) {
 
     board = ChessBoard(boardId, config);
     game = new Chess();
+
+    $("#whiteMoveList").empty();
+    $("#blackMoveList").empty();
 }
 
 // do not pick up pieces if the game is over
@@ -130,8 +98,7 @@ function InitGame(boardId, config) {
 function onPieceDragStart(source, piece, position, orientation) {
     if (game.game_over() === true ||
         (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-        (game.turn() === 'b' && piece.search(/^w/) !== -1) ||
-        (game.turn() !== playerColor[0])) {
+        (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
         return false;
     }
 };
@@ -148,10 +115,6 @@ function onPieceDrop(source, target) {
     if (move === null) {
         return 'snapback';
     } else {
-        socket.emit('move', {
-            move: move,
-            board: game.fen()
-        });
         AddMove(move);
     }
 };
@@ -162,8 +125,8 @@ function onPieceSnapEnd() {
     board.position(game.fen());
 };
 
-if('serviceWorker' in navigator) {
-      navigator.serviceWorker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
         .register('./service-worker.js')
         .then(function() { console.log('Service Worker registered'); });
-    }
+}
